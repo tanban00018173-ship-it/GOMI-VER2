@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>民宿代管 MVP 策略 × 60%利潤率情境分析</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', 'PingFang TC', 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .section h3 {
+            color: #34495e;
+            font-size: 1.4rem;
+            margin: 25px 0 15px 0;
+            padding-left: 15px;
+            border-left: 4px solid #3498db;
+        }
+
+        .mvp-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 20px 0;
+        }
+
+        .mvp-card {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .mvp-card h4 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #fdcb6e;
+        }
+
+        .mvp-card ul {
+            list-style: none;
+        }
+
+        .mvp-card li {
+            margin: 12px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .mvp-card li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #00b894;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .profit-analysis {
+            background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .profit-analysis h3 {
+            color: #fdcb6e;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .cost-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .cost-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #fdcb6e;
+        }
+
+        .cost-item h4 {
+            color: #fdcb6e;
+            margin-bottom: 10px;
+        }
+
+        .cost-amount {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #00b894;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        th {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        tr:hover {
+            background-color: #e3f2fd;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .kpi-card {
+            background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .kpi-card h4 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+
+        .kpi-card ul {
+            list-style: none;
+            text-align: left;
+        }
+
+        .kpi-card li {
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .kpi-card li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #fdcb6e;
+            font-weight: bold;
+        }
+
+        .value-list {
+            list-style: none;
+            margin: 20px 0;
+        }
+
+        .value-list li {
+            background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);
+            color: white;
+            margin: 10px 0;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .conclusion {
+            background: linear-gradient(135deg, #fdcb6e 0%, #f39c12 100%);
+            color: #2c3e50;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .conclusion h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .conclusion ul {
+            list-style: none;
+            text-align: left;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .conclusion li {
+            margin: 10px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .conclusion li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+            
+            .mvp-grid, .kpi-grid, .cost-breakdown {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .step-number {
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 民宿代管 MVP 策略 × 60%利潤率情境分析</h1>
+            <p style="font-size: 1.2rem; color: #7f8c8d;">最快速測試市場 · 建立核心口碑 · 避免過度投資</p>
+        </div>
+
+        <div class="section">
+            <h2>🎯 MVP 策略目標</h2>
+            <div class="mvp-grid">
+                <div class="mvp-card">
+                    <h4>最快速測試市場</h4>
+                    <ul>
+                        <li>找到願意委託的前幾位業主</li>
+                        <li>驗證市場需求與接受度</li>
+                        <li>建立初步客戶基礎</li>
+                    </ul>
+                </div>
+                <div class="mvp-card">
+                    <h4>建立核心口碑</h4>
+                    <ul>
+                        <li>用最基本的服務換到正向評價</li>
+                        <li>建立第一批成功案例</li>
+                        <li>形成口碑傳播效應</li>
+                    </ul>
+                </div>
+                <div class="mvp-card">
+                    <h4>避免過度投資</h4>
+                    <ul>
+                        <li>先用手動 + 外包</li>
+                        <li>用 SOP 替代系統</li>
+                        <li>控制初期營運成本</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🪜 三大步驟</h2>
+            
+            <h3><span class="step-number">1</span>定義最小服務組合</h3>
+            <p style="margin-bottom: 20px; font-size: 1.1rem; color: #2c3e50;">
+                <strong>只做最有價值、不可或缺的三件事</strong>
+            </p>
+            
+            <div class="mvp-grid">
+                <div class="mvp-card">
+                    <h4>清潔交付（核心）</h4>
+                    <ul>
+                        <li>自己或小團隊，直接做翻房清潔</li>
+                        <li>QA 照片回傳</li>
+                        <li>這是業主最難自己維持的</li>
+                    </ul>
+                </div>
+                <div class="mvp-card">
+                    <h4>客服支援（加分）</h4>
+                    <ul>
+                        <li>用手機 + LINE/WhatsApp</li>
+                        <li>白天回覆 ≤30 分鐘</li>
+                        <li>不用系統，先「人接 → 再補票」</li>
+                    </ul>
+                </div>
+                <div class="mvp-card">
+                    <h4>收益管理（可選）</h4>
+                    <ul>
+                        <li>先研究一到兩個 OTA</li>
+                        <li>用 Excel 手動調價</li>
+                        <li>不必馬上導入 PMS</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div style="background: #e8f5e8; padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 4px solid #00b894;">
+                <h4 style="color: #00b894; margin-bottom: 10px;">✅ MVP = 「清潔 + 基礎客服」</h4>
+                <p style="color: #2c3e50;">這就是最小代管產品，足以讓業主付費。</p>
+            </div>
+
+            <h3><span class="step-number">2</span>建立最小工具鏈</h3>
+            <p style="margin-bottom: 20px; font-size: 1.1rem; color: #2c3e50;">
+                <strong>不要一次導入 PMS/自動化，先靠低成本工具</strong>
+            </p>
+            
+            <div class="mvp-grid">
+                <div class="mvp-card">
+                    <h4>派工 & 照片回報</h4>
+                    <ul>
+                        <li>Google Form / LINE 群組</li>
+                        <li>清潔完成拍照回傳</li>
+                        <li>簡單有效的追蹤機制</li>
+                    </ul>
+                </div>
+                <div class="mvp-card">
+                    <h4>對帳</h4>
+                    <ul>
+                        <li>Excel + Google Sheet</li>
+                        <li>手動但準確的財務管理</li>
+                        <li>成本低且容易上手</li>
+                    </ul>
+                </div>
+                <div class="mvp-card">
+                    <h4>溝通</h4>
+                    <ul>
+                        <li>LINE / WhatsApp 作為客服通道</li>
+                        <li>即時且免費的溝通工具</li>
+                        <li>業主熟悉的平台</li>
+                    </ul>
+                </div>
+                <div class="mvp-card">
+                    <h4>文件</h4>
+                    <ul>
+                        <li>Notion/Google Drive 放 SOP</li>
+                        <li>照片紀錄管理</li>
+                        <li>雲端協作與備份</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3><span class="step-number">3</span>找前 3 位業主</h3>
+            
+            <div class="mvp-grid">
+                <div class="mvp-card">
+                    <h4>渠道</h4>
+                    <ul>
+                        <li>Facebook 社團（宜蘭民宿、Airbnb Host 台灣）</li>
+                        <li>Line 群、當地房東協會</li>
+                        <li>先找「已有民宿營運、但清潔與客服痛點大」的業主</li>
+                    </ul>
+                </div>
+                <div class="mvp-card">
+                    <h4>方案</h4>
+                    <ul>
+                        <li>推 基礎方案 (18%)：清潔 + 客服</li>
+                        <li>抽成低，門檻低</li>
+                        <li>保證：準時翻房、照片回傳、客服即時回覆</li>
+                    </ul>
+                </div>
+                <div class="mvp-card">
+                    <h4>交付</h4>
+                    <ul>
+                        <li>承諾 QA：每房清潔照片 + 退房 1h 內完成</li>
+                        <li>承諾客服：30 分鐘內回覆</li>
+                        <li>承諾透明：每月底給 Excel 報表</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📊 60% 利潤率情境分析</h2>
+            <div class="profit-analysis">
+                <h3>在平均每戶代管營收 8.97 萬元／月的前提下</h3>
+                <div style="text-align: center; margin: 20px 0;">
+                    <div style="font-size: 1.5rem; margin-bottom: 10px;">
+                        <strong>利潤：5.38 萬元（約 60%）</strong>
+                    </div>
+                    <div style="font-size: 1.2rem;">
+                        成本上限：3.6 萬元（約 40%）
+                    </div>
+                </div>
+                
+                <h4 style="color: #fdcb6e; text-align: center; margin: 25px 0;">成本分配建議</h4>
+                
+                <div class="cost-breakdown">
+                    <div class="cost-item">
+                        <h4>清潔與翻房</h4>
+                        <div class="cost-amount">1.44 萬元／月（40%）</div>
+                        <p style="margin-top: 10px; font-size: 0.9rem;">這是最大支出項目，必須用外包團隊或 SOP 控制效率。</p>
+                    </div>
+                    <div class="cost-item">
+                        <h4>客服與訂單處理</h4>
+                        <div class="cost-amount">0.72 萬元／月（20%）</div>
+                        <p style="margin-top: 10px; font-size: 0.9rem;">透過 LINE/WhatsApp 即時回覆，夜間可採輪班或外包。</p>
+                    </div>
+                    <div class="cost-item">
+                        <h4>收益管理與定價</h4>
+                        <div class="cost-amount">0.36 萬元／月（10%）</div>
+                        <p style="margin-top: 10px; font-size: 0.9rem;">先用 Excel/手動調價，避免過早投資 PMS 系統。</p>
+                    </div>
+                    <div class="cost-item">
+                        <h4>業主關係與報表</h4>
+                        <div class="cost-amount">0.36 萬元／月（10%）</div>
+                        <p style="margin-top: 10px; font-size: 0.9rem;">每月產出報表，維持透明度與信任。</p>
+                    </div>
+                    <div class="cost-item">
+                        <h4>行銷與平台維護</h4>
+                        <div class="cost-amount">0.36 萬元／月（10%）</div>
+                        <p style="margin-top: 10px; font-size: 0.9rem;">小規模操作社群、OTA 調整，不必大筆投放廣告。</p>
+                    </div>
+                    <div class="cost-item">
+                        <h4>維修與巡檢</h4>
+                        <div class="cost-amount">0.18 萬元／月（5%）</div>
+                        <p style="margin-top: 10px; font-size: 0.9rem;">以「急修」為主，非必要不投入大額。</p>
+                    </div>
+                    <div class="cost-item">
+                        <h4>緊急應變與風險準備金</h4>
+                        <div class="cost-amount">0.18 萬元／月（5%）</div>
+                        <p style="margin-top: 10px; font-size: 0.9rem;">留作押金不足、突發事件的緩衝。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📊 MVP 成功判斷指標</h2>
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <h4>市場驗證</h4>
+                    <ul>
+                        <li>3 個月內簽到 3 位業主</li>
+                        <li>建立初步客戶基礎</li>
+                        <li>驗證服務模式可行性</li>
+                    </ul>
+                </div>
+                <div class="kpi-card">
+                    <h4>服務品質</h4>
+                    <ul>
+                        <li>CSAT ≥ 4.5/5</li>
+                        <li>清潔 QA ≥ 90/100</li>
+                        <li>客服回覆時間達標</li>
+                    </ul>
+                </div>
+                <div class="kpi-card">
+                    <h4>財務健康</h4>
+                    <ul>
+                        <li>單月正向現金流</li>
+                        <li>收入 > 清潔人力成本 + 基本開銷</li>
+                        <li>維持 60% 利潤率</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎯 維持 60% 利潤率的關鍵策略</h2>
+            <ul class="value-list">
+                <li><strong>清潔效率化</strong>：外包或標準化流程，控制在 1.44 萬內</li>
+                <li><strong>客服即時化</strong>：用低成本人力或工具支撐，壓在 0.72 萬內</li>
+                <li><strong>其他模組輕量化</strong>：收益、行銷、報表都要精簡，能手動就手動</li>
+            </ul>
+        </div>
+
+        <div class="conclusion">
+            <h3>💡 總結</h3>
+            <p style="margin-bottom: 20px; font-size: 1.1rem;">
+                <span class="highlight">MVP 版本不用 PMS、不用自動化、不用大團隊</span>
+            </p>
+            <p style="font-size: 1.1rem; margin-bottom: 20px;">
+                <strong>核心就是：清潔做得好，客服回得快，報表透明</strong>
+            </p>
+            <p style="font-size: 1.1rem; margin-bottom: 20px;">
+                等 3–5 位業主穩定後，再漸進擴充收益管理、行銷、自有直訂頁
+            </p>
+            <p style="font-size: 1.1rem; font-weight: bold; color: #e74c3c;">
+                換句話說，這個模式就是：低成本標準化運作 + 高利潤保留
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+
